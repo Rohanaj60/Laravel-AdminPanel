@@ -34,20 +34,23 @@ Route::middleware('splade')->group(function () {
     Route::get('/', function () {
         return view('home.index');
     });
-
+   
     Route::middleware('auth')->group(function () {
-        Route::get('/dashboard', function () {
-            return view('dashboard');
-        })->middleware(['verified'])->name('dashboard');
-
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-        Route::delete('/resetRole/{user}', [UserController::class, 'resetRoles'])->name('user.resetRoles');
-        Route::resource('/products', ProductController::class);
-        Route::resource('/users', UserController::class);
-        Route::resource('/roles', RoleController::class);
-        Route::resource('/permissions', PermissionController::class);
+        // Route::group(['middleware' => ['role:admin'],['role:manager'],['role:user']], function () {
+        Route::group(['middleware' => ['role:admin|manager|user']], function () {
+            Route::get('/dashboard', function () {
+                return view('dashboard');
+            })->middleware(['verified'])->name('dashboard');
+            Route::delete('/resetRole/{user}', [UserController::class, 'resetRoles'])->name('user.resetRoles');
+            Route::resource('/products', ProductController::class);
+            Route::resource('/users', UserController::class);
+            Route::resource('/roles', RoleController::class);
+            Route::resource('/permissions', PermissionController::class);
+        });
+       
     });
 
     require __DIR__.'/auth.php';

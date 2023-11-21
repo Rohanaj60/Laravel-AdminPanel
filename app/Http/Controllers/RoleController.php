@@ -10,6 +10,11 @@ use Spatie\Permission\Models\Permission;
 use App\Models\User;
 class RoleController extends Controller
 {
+    // public function __construct()
+    // {
+    //     $this->middleware(['permission:edit role|add role | add role|view role']);
+    // }
+
     /**
      * Display a listing of the resource.
      */
